@@ -365,8 +365,34 @@ struct UnityGUI (
     )
 )
 
--- Setup UI in existing Import/Export menus if using 3ds Max 2018+
-if (maxVersion())[1] >= 20000 then(
+-- Autodesk 3ds Max 2025+ uses the new CUI menus API (menuMan was removed).
+-- UUIDs below stay stable to preserve user menu customizations.
+if (maxVersion())[1] >= 27000 then (
+    fn unityFbxRegisterMenus = (
+        local menuMgr = callbacks.notificationParam()
+        if menuMgr != undefined do (
+            local unityMenu = menuMgr.mainMenuBar.CreateSubMenu "C2F78C17-604D-4E27-9AAE-AE35B9873D01" "Unity"
+            unityMenu.CreateAction "C2F78C17-604D-4E27-9AAE-AE35B9873D02" 647394 "UnityImport`Unity" title:"Import from Unity..."
+            unityMenu.CreateAction "C2F78C17-604D-4E27-9AAE-AE35B9873D03" 647394 "UnityExport`Unity" title:"Export to Unity"
+            unityMenu.CreateAction "C2F78C17-604D-4E27-9AAE-AE35B9873D04" 647394 "UnityExportModel`Unity" title:"Export to Unity (Model Only)"
+        )
+    )
+    callbacks.removeScripts id:#unityFbxMenus
+    callbacks.addScript #cuiRegisterMenus unityFbxRegisterMenus id:#unityFbxMenus
+
+    -- The user Startup folder may load after the initial menu registration.
+    -- Reloading the current configuration re-fires #cuiRegisterMenus.
+    try (
+        local menuMgr = maxOps.GetICuiMenuMgr()
+        if menuMgr != undefined do (
+            menuMgr.LoadConfiguration (menuMgr.GetCurrentConfiguration())
+        )
+    ) catch (
+        format "Unity FBX Integration: menu refresh deferred until next startup.\n"
+    )
+)
+-- Legacy menuMan API, for Max 2018 through Max 2024.
+else if (maxVersion())[1] >= 20000 then(
     global importMenuName = "File-Import"
     global exportMenuName = "File-Export"
     
