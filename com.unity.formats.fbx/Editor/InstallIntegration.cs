@@ -855,7 +855,7 @@ namespace UnityEditor.Formats.Fbx.Exporter
             if (dcc is MaxIntegration)
             {
                 var package = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(
-                    "Packages/com.unity.formats.fbx/package.json");
+                    "Packages/com.unity.formats.fbx/Editor/InstallIntegration.cs");
                 if (package == null || string.IsNullOrEmpty(package.resolvedPath))
                 {
                     Debug.LogError("Could not resolve FBX Exporter's installed package path.");
