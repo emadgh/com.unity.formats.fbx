@@ -43,3 +43,23 @@ Reporting Bugs
 --------------
 
 Please create a minimal project that reproduces the bug and use the Unity Bug Report (built in to the Unity Editor).
+
+## Fork: Unity 6.7 and 3ds Max 2026 (experimental)
+
+This branch adds support for Autodesk's 2025+ CUI menu registration API,
+and bundles Max integration scripts in the Git-installable Unity package.
+It is based on Unity FBX Exporter 5.1.6.
+
+In **Window > Package Manager > + > Add package from git URL**, enter:
+
+```text
+https://github.com/emadgh/com.unity.formats.fbx.git?path=/com.unity.formats.fbx#compat/unity-6.7-max-2026
+```
+
+In **Edit > Project Settings > FBX Export**, choose 3ds Max 2026,
+click **Install Unity Integration**, and restart Max. See
+[integration setup](com.unity.formats.fbx/Documentation~/integration-setup.md).
+
+**Status:** Not runtime-tested on Unity 6.7 and 3ds Max 2026 yet.
+This provides FBX integration, **not** automatic Max instance-to-Unity
+Prefab conversion.
