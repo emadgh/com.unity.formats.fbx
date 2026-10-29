@@ -7,6 +7,29 @@ The Unity Integration tool is a plug-in that installs on top of **Autodesk® May
 * The Unity Integration tool is **only supported on Windows and MacOS**.
 * The 3D modeling application to integrate with must be installed on the same machine as the Unity Editor.
 
+## Installing the Unity 6.7 / 3ds Max 2026 fork
+
+In Unity **Window > Package Manager > + > Add package from git URL** use:
+
+```text
+https://github.com/emadgh/com.unity.formats.fbx.git?path=/com.unity.formats.fbx#compat/unity-6.7-max-2026
+```
+
+Remove the original registry copy of `com.unity.formats.fbx` before
+adding this source package, to avoid duplicate package names. The Max
+scripts are bundled in `Editor/Integrations~/Integrations/Autodesk/max/scripts/`
+(no prebuilt `UnityFbxForMax.7z` archive is required).
+
+Close 3ds Max, then open **Edit > Project Settings > FBX Export**.
+Select 3ds Max 2026 or browse to `3dsmax.exe`, select
+**Install Unity Integration**, and reopen Max. Look for the top-level
+**Unity** menu with Import from Unity, Export to Unity and
+Export to Unity (Model Only).
+
+**Experimental:** This is a source-level compatibility patch. Verify
+menu creation, FBX exchange and round-trip updates on a local installation
+before relying on it for production.
+
 ## Automatic setup from Unity
 
 To install the Unity Integration tool and make it available in your 3D modeling application:

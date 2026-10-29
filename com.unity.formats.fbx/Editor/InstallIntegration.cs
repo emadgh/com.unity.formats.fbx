@@ -849,6 +849,33 @@ namespace UnityEditor.Formats.Fbx.Exporter
 
         private static bool GetIntegrationFolder(DCCIntegration dcc)
         {
+            // Git-installed source packages omit the build-generated Max .7z archive.
+            // Use the bundled MAXScript sources, resolving the physical PackageCache
+            // path instead of assuming Packages/ is a real filesystem directory.
+            if (dcc is MaxIntegration)
+            {
+                var package = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(
+                    "Packages/com.unity.formats.fbx/Editor/InstallIntegration.cs");
+                if (package == null || string.IsNullOrEmpty(package.resolvedPath))
+                {
+                    Debug.LogError("Could not resolve FBX Exporter's installed package path.");
+                    return false;
+                }
+                var integrationFolder = System.IO.Path.Combine(package.resolvedPath,
+                    "Editor", "Integrations~");
+                var pluginFile = System.IO.Path.Combine(integrationFolder,
+                    MaxIntegration.PluginPath);
+                if (!System.IO.File.Exists(pluginFile))
+                {
+                    Debug.LogError(string.Format(
+                        "3ds Max integration scripts missing at {0}. Install the fork using its package subfolder URL.",
+                        pluginFile));
+                    return false;
+                }
+                dcc.SetIntegrationFolderPath(integrationFolder);
+                return true;
+            }
+
             // decompress zip file if it exists, otherwise try using default location
             var zipPath = dcc.IntegrationZipFullPath;
             if (System.IO.File.Exists(zipPath))
